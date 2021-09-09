@@ -42,7 +42,7 @@ class EnterpriseToken < ApplicationRecord
     end
 
     def show_banners?
-      OpenProject::Configuration.ee_manager_visible? && (!current || current.expired?)
+      OpenProject::Configuration.ee_manager_visible? && (!current)
     end
 
     def set_current_token
@@ -56,7 +56,6 @@ class EnterpriseToken < ApplicationRecord
 
   validates_presence_of :encoded_token
   validate :valid_token_object
-  validate :valid_domain
 
   before_save :unset_current_token
   before_destroy :unset_current_token
@@ -65,7 +64,6 @@ class EnterpriseToken < ApplicationRecord
            :subscriber,
            :mail,
            :company,
-           :domain,
            :issued_at,
            :starts_at,
            :expires_at,
@@ -86,9 +84,6 @@ class EnterpriseToken < ApplicationRecord
     RequestStore.delete :current_ee_token
   end
 
-  def expired?
-    token_object.expired? || invalid_domain?
-  end
 
   ##
   # The domain is only validated for tokens from version 2.0 onwards.

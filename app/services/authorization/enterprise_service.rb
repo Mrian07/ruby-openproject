@@ -56,7 +56,7 @@ class Authorization::EnterpriseService
   # Return a true ServiceResult if the token contains this particular action.
   def call(action)
     allowed =
-      if token.nil? || token.token_object.nil? || token.expired?
+      if token.nil? || token.token_object.nil?
         false
       else
         process(action)

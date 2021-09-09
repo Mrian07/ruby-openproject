@@ -38,7 +38,6 @@ describe 'Enterprise token', type: :feature, js: true do
     token.mail = 'foo@example.org'
     token.starts_at = Date.today
     token.expires_at = nil
-    token.domain = Setting.host_name
 
     token
   end
@@ -80,7 +79,7 @@ describe 'Enterprise token', type: :feature, js: true do
         expect(page).to have_selector('.enterprise--active-token')
 
         expect(page.all('.attributes-key-value--key').map(&:text))
-          .to eq ['Subscriber', 'Email', 'Domain', 'Maximum active users', 'Starts at', 'Expires at']
+          .to eq ['Subscriber', 'Email', 'Maximum active users', 'Starts at', 'Expires at']
         expect(page.all('.attributes-key-value--value').map(&:text))
           .to eq ['Foobar', 'foo@example.org', Setting.host_name, 'Unlimited', format_date(Date.today), 'Unlimited']
 

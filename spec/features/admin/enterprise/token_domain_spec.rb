@@ -30,7 +30,6 @@ require 'spec_helper'
 
 describe 'Enterprise Edition token domain', type: :feature, js: true do
   let(:current_user) { FactoryBot.create :admin }
-  let(:ee_token) { File.read(Rails.root.join("spec/fixtures/ee_tokens/v2_1_user_localhost_3001.token")) }
 
   before do
     allow(User).to receive(:current).and_return current_user
@@ -41,7 +40,6 @@ describe 'Enterprise Edition token domain', type: :feature, js: true do
       visit '/admin/enterprise'
 
       fill_in "enterprise_token[encoded_token]", with: ee_token
-
       click_on "Save"
     end
   end
@@ -98,26 +96,6 @@ describe 'Enterprise Edition token domain', type: :feature, js: true do
 
           it 'updates the token' do
             expect(body).to have_text 'Successful update.'
-          end
-        end
-      end
-
-      context 'with incorrect domain' do
-        it_behaves_like 'replacing a token' do
-          let(:new_token) { File.read(Rails.root.join("spec/fixtures/ee_tokens/v2_1_user_localhost_3000.token")) }
-
-          it 'shows an invalid domain error' do
-            expect(body).to have_text 'Domain is invalid.'
-          end
-
-          it "shows the new token's info" do
-            expect(body).to have_text 'localhost:3000'
-          end
-
-          it "but doesn't save the new token" do
-            visit '/admin/enterprise'
-
-            expect(body).to have_text 'localhost:3001'
           end
         end
       end
